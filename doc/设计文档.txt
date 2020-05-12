@@ -1,0 +1,53 @@
+设计文档
+
+目录结构介绍
+
+目录结构很简单，如下：
+├─client
+├─common
+│  ├─protos
+│  └─Util
+└─server
+
+client文件夹下放的是客户端相关代码；
+server文件夹下放的是服务端代码；
+common文件夹下计划放的是两者都会用到的公共代码，尤其是和通信接口相关，目前就俩文件，一个proto文件和一个h文件
+
+//todo 应该还有个目录放ssl/tls证书之类的资源文件
+
+
+
+服务端部分
+
+//假装有加密
+//代码https://github.com/grpc/grpc/issues/12146#issuecomment-321627641
+//密钥文件通过启动参数传到cpp中，配置，然后启动grpc server
+
+main函数解析命令行，启动服务器
+
+服务器（server.cc）基本上就是调用各子模块的功能
+服务端分离出数据存储部分和业务逻辑部分两个子模块。
+
+存储部分（database.cc）
+存储部分的数据也可进行拆分，类似图书管理系统拆表，目前，这个模块拆成了用户扣费服务和扣费服务明细两部分，对应代码dd_table和company_table
+（如果扣费服务的单元是功能（LOL,QQ music）而不是企业的话(Tencent),把company_table改个名，value的内容改一改，总体结构应该不用改）
+	std::unordered_map<int, std::unordered_set<unsigned int>> dd_table;//user_id, company_id
+	std::unordered_map<int, std::string> company_table;//company_id, company_name
+此外，在外存进行持久化存储时加密
+
+业务部分（DeductionServiceImpl.cc）
+业务部分实现了查询，添加，删除扣费项目
+
+
+
+客户端（和服务器类似）
+
+//假装有加密
+//代码https://github.com/grpc/grpc/issues/12146#issuecomment-321627641
+//密钥文件通过启动参数传到cpp中，配置，然后启动grpc server
+
+main函数解析命令行，启动客户端
+
+假定是个合法用户（如果要做的话应该会拆出个登录或访问控制模块吧），用户根据需求去进行查询，添加，删除等操作
+
+

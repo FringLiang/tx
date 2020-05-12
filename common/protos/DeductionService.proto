@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+//option java_multiple_files = true;
+//option java_package = "io.grpc.examples.helloworld";
+option java_outer_classname = "DeductionServiceProto";
+//option objc_class_prefix = "HLW";
+
+package DeductionService;
+
+service Deduction {
+  rpc GetList (UserId) returns (ServiceInfoList) {}
+  rpc AddService (AddReq) returns (Empty) {}
+  rpc RemoveService (RemoveReq) returns (Empty) {}
+  
+}
+
+message UserId {
+  uint32 userId = 1;
+}
+
+message ServiceId {
+  uint32 serviceId = 1;
+}
+
+message AddReq {
+  UserId id = 1;
+  uint32 serviceId = 2;
+}
+
+
+message RemoveReq {
+  UserId id = 1;
+  uint32 serviceId = 2;
+}
+
+message Empty {
+//  enum State {
+//    ACTION_SUCESS = 0;
+//    ACTION_ERROR = 1;
+//	//drop
+//  }
+//  State state = 1;
+}
+
+
+message ServiceInfo {
+  ServiceId id = 1;
+  bytes name = 2;
+}
+
+message ServiceInfoList {
+  repeated ServiceInfo service = 1;
+}
+
